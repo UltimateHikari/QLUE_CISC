@@ -19,8 +19,98 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-
+// 10-bit
 module qlue_cisc(
-
+    input clk,
+    input reset
     );
+
+logic [6:0] ip;
+logic [9:0] acc, d_out;   
+logic [3:0] inst_c;
+logic [6:0] inst_a;
+
+//-- MCU
+enum logic [3:0] {inst_addr = 4'b0000,
+                  inst_read = 4'b0001,
+                  decode    = 4'b0010,
+                  load_read = 4'b0011,
+                  load      = 4'b0100,
+                  store     = 4'b0101,
+                  add_read  = 4'b0110,
+                  add       = 4'b0111,
+                  decrement = 4'b1000,
+                  branch    = 4'b1001,
+                  halt      = 4'b1010} state;
+                  
+parameter ld = 3'b000;
+parameter st = 3'b001;
+parameter ad = 3'b010;
+parameter dc = 3'b011;
+parameter br = 3'b100;
+parameter ht = 3'b101;
+
+always @(posedge clk or posedge reset)
+    if (reset) begin
+         state <= inst_addr;
+    end
+    else
+        case (state)
+            inst_addr: state <= inst_read;
+            inst_read: state <= decode;
+            decode:    case (inst_c)
+                            ld: state <= load_read;
+                            st: state <= store;
+                            ad: state <= add_read;
+                            dc: state <= decrement;
+                            br: state <= branch;
+                            ht: state <= halt;
+                       endcase
+            load_read: state <= load;
+            add_read:  state <= add;
+            load:      state <= inst_addr;
+            store:     state <= inst_addr;
+            add:       state <= inst_addr;
+            decrement: state <= inst_addr;
+            branch:    state <= inst_addr;
+            halt:      state <= halt;
+        endcase
+
+//---- IP
+always @(posedge clk or posedge reset)
+    if (reset) begin
+        ip <= 7'b0000000;
+    end
+    else if ((state == load) | (state == store) | (state == add) | (state == decrement))
+        ip = ip + 1;
+    else if ((state == branch))
+        if(acc == 0)
+            ip <= inst_a;
+        else
+            ip <= ip + 1;
+                     
+//---- Acc + Alu
+always @(posedge clk or posedge reset) begin
+    if (reset) 
+        acc <= 7'b0000000;
+    else if (state == load)
+        acc <= d_out;
+    else if (state == add)
+        acc <= acc + d_out;
+    else if (state == decrement)
+        acc <= acc - 1;
+end
+    
+//---- IR
+always @(posedge clk or posedge reset)
+    if (reset) begin
+        inst_c = 3'b000;
+        inst_a = 7'b0000000;
+    end
+    else if (state == inst_read) begin
+        inst_c = d_out[6:0];
+        inst_a = d_out[9:7];
+    end
+//---- Mem    
+    
 endmodule

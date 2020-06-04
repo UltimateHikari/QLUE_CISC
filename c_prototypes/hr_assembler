@@ -1,0 +1,55 @@
+/**
+ * ads - array address, have 1 at start
+ * ptr - pointer = ads at start
+ * acc2 - for saving acc while ptr operations
+ * in - input address 0..7
+ * c1 - outside counter address, 0..n
+ * c2 - inside counter address, 0..(ram[c1] - 1)
+ * res - result address
+ */
+/// also want increment ic, *mp, -sb, ldp, stp -> 10bit, 4/6 proportion, memsize 64 - 8+6 + program(max 51)
+/// ldp load by pointer -> address of pointer then load, also stp 
+/// remap halt to 0000
+/// place branches carefully
+
+ld ads
+ic
+st ads
+st c1
+
+ld in
+sb c1 
+br *end*
+	ld c1
+	ic
+	st c1
+	ld c2
+	mp *halt addr*
+	st c2
+
+	ic 
+	sb c1
+	br *end of inner cycle*
+		ld c2
+		st ptr
+		ldp ptr
+		st acc2   //cat[k]
+		ld c1
+		dc
+		sb c2
+		st ptr
+		ldp ptr
+		mp acc2
+		st acc2  //cat[k]*cat[i-1-k]
+		ld c1
+		st ptr
+		ldp ptr
+		ad acc2 // +=
+		stp ptr
+
+ld ads
+ad in
+st ptr
+ldp ptr
+st res
+ht

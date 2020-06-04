@@ -112,5 +112,15 @@ always @(posedge clk or posedge reset)
         inst_a = d_out[9:7];
     end
 //---- Mem    
+logic [9:0] ram [127:0];
+
+initial $readmemb("memory.mem", ram, 0, 127);
+
+always @(posedge clk)
+    if(state == store)
+        ram[inst_a] <= acc;
+
+always @(posedge clk)
+    d_out <= ram[((state == inst_addr) ? ip : inst_a)];
     
 endmodule

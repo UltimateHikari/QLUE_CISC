@@ -1,0 +1,12 @@
+ads have 1 (zero C)
+in 1..7
+c1
+c2
+res
+
+mp for multiply
+increment via 'add ads'
+put zero via 'mp 'halt addrCode''
+
+//set c1
+

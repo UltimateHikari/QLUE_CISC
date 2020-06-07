@@ -2,7 +2,7 @@
  * ads - array address, have 1 at start
  * ptr - pointer = ads at start
  * acc2 - for saving acc while ptr operations
- * in - input address 0..7
+ * in - input address 1..7
  * c1 - outside counter address, 0..n
  * c2 - inside counter address, 0..(ram[c1] - 1)
  * res - result address

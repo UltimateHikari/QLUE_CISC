@@ -27,28 +27,31 @@ module qlue_cisc(
 
 logic [6:0] ip;
 logic [9:0] acc, d_out;   
-logic [3:0] inst_c;
+logic [2:0] inst_c;
 logic [6:0] inst_a;
 
 //-- MCU
-enum logic [3:0] {inst_addr = 4'b0000,
-                  inst_read = 4'b0001,
-                  decode    = 4'b0010,
-                  load_read = 4'b0011,
-                  load      = 4'b0100,
-                  store     = 4'b0101,
-                  add_read  = 4'b0110,
-                  add       = 4'b0111,
-                  decrement = 4'b1000,
-                  branch    = 4'b1001,
-                  halt      = 4'b1010} state;
+enum logic [3:0] {halt      = 4'b0000,  //for zero trick
+                  inst_addr = 4'b0001,
+                  inst_read = 4'b0010,
+                  decode    = 4'b0011,
+                  load_read = 4'b0100,
+                  load      = 4'b0101,
+                  store     = 4'b0110,
+                  add_read  = 4'b0111,
+                  add       = 4'b1000,
+                  mult_read = 4'b1001,
+                  mult      = 4'b1010,
+                  decrement = 4'b1011,
+                  branch    = 4'b1100} state;
                   
 parameter ld = 3'b000;
 parameter st = 3'b001;
 parameter ad = 3'b010;
-parameter dc = 3'b011;
-parameter br = 3'b100;
-parameter ht = 3'b101;
+parameter mp = 3'b011;
+parameter dc = 3'b100;
+parameter br = 3'b101;
+parameter ht = 3'b111;
 
 always @(posedge clk or posedge reset)
     if (reset) begin
@@ -68,9 +71,11 @@ always @(posedge clk or posedge reset)
                        endcase
             load_read: state <= load;
             add_read:  state <= add;
+            mult_read: state <= mult;
             load:      state <= inst_addr;
             store:     state <= inst_addr;
             add:       state <= inst_addr;
+            mult:      state <= inst_addr;
             decrement: state <= inst_addr;
             branch:    state <= inst_addr;
             halt:      state <= halt;
@@ -81,7 +86,7 @@ always @(posedge clk or posedge reset)
     if (reset) begin
         ip <= 7'b0000000;
     end
-    else if ((state == load) | (state == store) | (state == add) | (state == decrement))
+    else if ((state == load) | (state == store) | (state == add) | (state == decrement) | (ip == mp))
         ip = ip + 1;
     else if ((state == branch))
         if(acc == 0)
@@ -97,6 +102,8 @@ always @(posedge clk or posedge reset) begin
         acc <= d_out;
     else if (state == add)
         acc <= acc + d_out;
+    else if (state == mult)
+        acc <= acc * d_out;
     else if (state == decrement)
         acc <= acc - 1;
 end

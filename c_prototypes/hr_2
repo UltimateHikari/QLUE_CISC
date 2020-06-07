@@ -1,12 +1,50 @@
 ads have 1 (zero C)
 in 1..7
-c1
-c2
+c1 decremental-counter for main cycle
+c2 decremental-counter for inner cycle
+t1 // template for getting 'ld ads' with increment in outer c. then decrementing in inner c.
+t2 // template for getting 'ld ads' but static then incrementing in inner c.
+t3 // template for c2, at start 0 then incrementing
 res
 
-mp for multiply
-increment via 'add ads'
-put zero via 'mp 'halt addrCode''
+//mp for multiply
+//ic - pseudo increment via 'add ads'
+// goto<> - temponary names for actual addresses of lines
 
 //set c1
+ld in
+st c1
+ld c1      //start outer cycle
+dc
+st c1
+ld goto3   //shifting current counting node
+ic
+st goto3
+ld goto4
+ic
+st goto4
+ld t3      //setting inner cycle
+ic
+st c2
+ld t1
+st goto1
+ld t2
+st goto2
+	ld (ads)  //goto1    //start inner cycle
+	mp (ads)  //goto2
+	add (ads) //goto3
+	st (ads)  //goto4
+	ld goto1             //adjust indexes
+	dc
+	st goto1
+	ld goto2
+	ic
+	st goto2
+	dc c2
+	br c2 *to start of inner cycle*
+ld t1
+ic
+st t1
+br c1 to *start of outer cycle*
+ht (maybe then need to copy C(in) to res)
 

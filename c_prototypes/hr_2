@@ -1,7 +1,7 @@
-ads have 1 (zero C)
-in 1..7
-c1 decremental-counter for main cycle
-c2 decremental-counter for inner cycle
+ads stored as 00..01 (address of C0, C1..C5 going afterwards)
+in 1..7 
+c1 //decremental-counter for main cycle
+c2 //decremental-counter for inner cycle
 t1 // template for getting 'ld ads' with increment in outer c. then decrementing in inner c.
 t2 // template for getting 'ld ads' but static then incrementing in inner c.
 t3 // template for c2, at start 0 then incrementing

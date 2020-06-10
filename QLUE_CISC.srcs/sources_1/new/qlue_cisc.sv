@@ -87,8 +87,8 @@ always @(posedge clk or posedge reset)
     if (reset) begin
         ip <= 6'b000000;
     end
-    else if ((state == load) | (state == store) | (state == add) | (state == decrement) | (ip == mp))
-        ip = ip + 1;
+    else if ((state == load) | (state == store) | (state == add) | (state == decrement) | (state == mult))
+        ip <= ip + 1;
     else if ((state == branch))
         if(acc == 0)
             ip <= inst_a;

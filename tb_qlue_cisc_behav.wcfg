@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="45610fs"></ZoomStartTime>
-      <ZoomEndTime time="136211fs"></ZoomEndTime>
-      <Cursor1Time time="22000fs"></Cursor1Time>
+      <ZoomStartTime time="278990fs"></ZoomStartTime>
+      <ZoomEndTime time="367487fs"></ZoomEndTime>
+      <Cursor1Time time="297819fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="160"></NameColumnWidth>
+      <NameColumnWidth column_width="152"></NameColumnWidth>
       <ValueColumnWidth column_width="66"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="25" />
+   <WVObjectSize size="26" />
    <wvobject type="logic" fp_name="/tb_qlue_cisc/clk">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -92,9 +92,14 @@
       <obj_property name="ElementShortName">[49][8:0]</obj_property>
       <obj_property name="ObjectShortName">[49][8:0]</obj_property>
    </wvobject>
+   <wvobject type="array" fp_name="/tb_qlue_cisc/DUT/acc">
+      <obj_property name="ElementShortName">acc[8:0]</obj_property>
+      <obj_property name="ObjectShortName">acc[8:0]</obj_property>
+   </wvobject>
    <wvobject type="array" fp_name="/tb_qlue_cisc/DUT/ram">
       <obj_property name="ElementShortName">ram[63:0][8:0]</obj_property>
       <obj_property name="ObjectShortName">ram[63:0][8:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/tb_qlue_cisc/DUT/state">
       <obj_property name="ElementShortName">state[3:0]</obj_property>

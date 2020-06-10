@@ -26,7 +26,7 @@ module tb_qlue_cisc();
     
 qlue_cisc DUT(.clk(clk), .reset(reset));
 
-parameter PERIOD = 10;
+parameter PERIOD = 4;
 
 always begin
   clk = 1'b0; #(PERIOD/2);

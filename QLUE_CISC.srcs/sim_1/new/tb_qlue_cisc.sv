@@ -35,7 +35,7 @@ end
 
 initial begin
     reset = 1; #10;
-    reset = 0; #10000;
+    reset = 0; #15000;
     $finish;
 end;
 endmodule

@@ -65,7 +65,7 @@ always @(posedge clk or posedge reset)
                             ld: state <= load_read;
                             st: state <= store;
                             ad: state <= add_read;
-                            mp: state <= mult;
+                            mp: state <= mult_read;
                             dc: state <= decrement;
                             br: state <= branch;
                             ht: state <= halt;

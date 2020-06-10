@@ -19,19 +19,19 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-// 10-bit
+// 9-bit
 module qlue_cisc(
     input clk,
     input reset
     );
 
-logic [6:0] ip;
-logic [9:0] acc, d_out;   
+logic [5:0] ip;
+logic [8:0] acc, d_out;   
 logic [2:0] inst_c;
-logic [6:0] inst_a;
+logic [5:0] inst_a;
 
 //-- MCU
-enum logic [3:0] {halt      = 4'b0000,  //for zero trick
+enum logic [3:0] {halt      = 4'b0000,  
                   inst_addr = 4'b0001,
                   inst_read = 4'b0010,
                   decode    = 4'b0011,
@@ -44,14 +44,14 @@ enum logic [3:0] {halt      = 4'b0000,  //for zero trick
                   mult      = 4'b1010,
                   decrement = 4'b1011,
                   branch    = 4'b1100} state;
-                  
-parameter ld = 3'b000;
-parameter st = 3'b001;
-parameter ad = 3'b010;
-parameter mp = 3'b011;
-parameter dc = 3'b100;
-parameter br = 3'b101;
-parameter ht = 3'b111;
+
+parameter ht = 3'b000;                  
+parameter ld = 3'b001;
+parameter st = 3'b010;
+parameter ad = 3'b011;
+parameter mp = 3'b100;
+parameter dc = 3'b101;
+parameter br = 3'b111;
 
 always @(posedge clk or posedge reset)
     if (reset) begin
@@ -65,6 +65,7 @@ always @(posedge clk or posedge reset)
                             ld: state <= load_read;
                             st: state <= store;
                             ad: state <= add_read;
+                            mp: state <= mult;
                             dc: state <= decrement;
                             br: state <= branch;
                             ht: state <= halt;
@@ -84,7 +85,7 @@ always @(posedge clk or posedge reset)
 //---- IP
 always @(posedge clk or posedge reset)
     if (reset) begin
-        ip <= 7'b0000000;
+        ip <= 6'b000000;
     end
     else if ((state == load) | (state == store) | (state == add) | (state == decrement) | (ip == mp))
         ip = ip + 1;
@@ -97,7 +98,7 @@ always @(posedge clk or posedge reset)
 //---- Acc + Alu
 always @(posedge clk or posedge reset) begin
     if (reset) 
-        acc <= 7'b0000000;
+        acc <= 6'b000000;
     else if (state == load)
         acc <= d_out;
     else if (state == add)
@@ -112,16 +113,16 @@ end
 always @(posedge clk or posedge reset)
     if (reset) begin
         inst_c = 3'b000;
-        inst_a = 7'b0000000;
+        inst_a = 6'b000000;
     end
     else if (state == inst_read) begin
-        inst_c = d_out[6:0];
-        inst_a = d_out[9:7];
+        inst_a = d_out[5:0];
+        inst_c = d_out[8:6];
     end
 //---- Mem    
-logic [9:0] ram [127:0];
+logic [8:0] ram [63:0];
 
-initial $readmemb("memory.mem", ram, 0, 127);
+initial $readmemb("memory.mem", ram, 0, 63);
 
 always @(posedge clk)
     if(state == store)

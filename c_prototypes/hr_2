@@ -26,7 +26,7 @@ st goto4
 ld t3      //setting inner cycle
 ic
 st c2
-ld t1
+ld t1      /reseting 2 pointers in cycle
 st goto1
 ld t2
 st goto2
@@ -47,4 +47,14 @@ ic
 st t1
 br c1 to *start of outer cycle*
 ht (maybe then need to copy C(in) to res)
+
+parameter ht = 3'b000;                  
+parameter ld = 3'b001;
+parameter st = 3'b010;
+parameter ad = 3'b011;
+parameter mp = 3'b100;
+parameter dc = 3'b101;
+parameter br = 3'b111;
+
+
 
